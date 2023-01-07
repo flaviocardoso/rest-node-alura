@@ -1,0 +1,3 @@
+FROM mysql:8.0.1
+ENV MYSQL_ROOT_PASSWORD=flaviocardoso
+EXPOSE 3306

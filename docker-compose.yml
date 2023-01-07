@@ -1,0 +1,46 @@
+version: '2.2.1'
+services:
+  db:
+    build: 
+      dockerfile: ./docker/meu_mysql.dockerfile
+    networks:
+      - rede
+    environment:
+      - MYSQL_ROOT_PASSWORD=flaviocardoso
+      - MYSQL_DATABASE=agenda_petshop
+    container_name: meu_mysql
+    image: flaviocardoso/mysql
+    ports:
+      - "3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    networks:
+      - rede
+    container_name: meu_phpmyadmin
+    ports:
+      - "8081:80"
+    links:
+      - db
+    depends_on:
+      - db
+
+  app:
+    build:
+      dockerfile: ./docker/node_start.dockerfile
+      context: .
+    networks:
+      - rede
+    image: flaviocardoso/node_start
+    container_name: node_start
+    command: ["npm", "start"]
+    links:
+      - db
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+networks:
+  rede:
+    driver: bridge
